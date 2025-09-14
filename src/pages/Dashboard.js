@@ -50,15 +50,24 @@ const Dashboard = () => {
   });
   const ordersByDate = Object.keys(ordersByDateMap).map((date) => ({ date, orders: ordersByDateMap[date] }));
 
+
   // Top 5 customers by spend
-  const topCustomers = customers
-    .map((c) => {
-      const spend = orders.filter((o) => o.customer_id === c.id)
-                          .reduce((sum, o) => sum + parseFloat(o.total_price || 0), 0);
-      return { name: `${c.first_name || ""} ${c.last_name || ""}`.trim(), spend };
-    })
-    .sort((a, b) => b.spend - a.spend)
-    .slice(0, 5);
+const topCustomers = customers
+  .map((c) => {
+    const spend = orders
+      .filter((o) => o.customer_id === c.shopifyId)   // FIX HERE
+      .reduce((sum, o) => sum + parseFloat(o.total_price || 0), 0);
+
+    return { 
+      name: `${c.first_name || ""} ${c.last_name || ""}`.trim() || c.email,
+      spend 
+    };
+  })
+  .sort((a, b) => b.spend - a.spend)
+  .slice(0, 5);
+
+
+
 
   return (
     <div style={{ padding: "20px" }}>
