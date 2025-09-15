@@ -1,70 +1,62 @@
-# Getting Started with Create React App
+# Multi-Tenant Shopify Frontend Dashboard
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
+A React-powered analytics dashboard for multi-tenant Shopify stores. It consumes backend APIs to display products, customers, and orders along with key business metrics such as total revenue, orders by date, and top customers by spend.
 
-## Available Scripts
+## 1 .Setup Instructions
 
-In the project directory, you can run:
+### i . Clone the repository
+```bash
+git clone https://github.com/Saikethan-05/my-shopify-frontend.git
+cd my-shopify-frontend
 
-### `npm start`
+### ii . Install dependencies
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+npm install
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### iii. Run the development server
 
-### `npm test`
+npm start
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
+## 2 .Architecture diagram.
+   ┌───────────────────┐
+   │   Shopify Store    │
+   └─────────▲─────────┘
+             │
+             │ (Data Sync)
+             │
+   ┌─────────┴─────────┐
+   │  Backend Service   │  ← APIs: /products, /customers, /orders, /tenants
+   │ (Node.js + MySQL)  │
+   └─────────▲─────────┘
+             │
+             │ (REST API calls via Axios)
+             │
+   ┌─────────┴─────────┐
+   │   React Frontend   │
+   │  (Charts + UI)     │
+   └────────────────────┘
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+The frontend fetches this data per-tenant and displays:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+->Total Products, Customers, Orders, Revenue
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+->Orders by Date (line chart)
 
-### `npm run eject`
+->Top 5 Customers by Spend (bar chart)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 3. Known limitations or assumptions.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-## Learn More
+- **Authentication**: Basic Auth is only implemented on backend onboarding. Frontend has no authentication layer.  
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- **Data Freshness**: Charts depend on the latest sync from Shopify → backend. If sync isn’t triggered, frontend may show stale data.  
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- **Visualization**: Currently supports only line chart (orders over time) and bar chart (top customers). More advanced analytics (e.g., product sales trends, cohort analysis) can be added later.  
 
-### Code Splitting
+- **Tenant Selection**: Defaults to the first tenant in the list; dropdown is used to switch tenants.  
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- **Error Handling**: Errors are logged in the console but not shown in the UI for end-users.  
